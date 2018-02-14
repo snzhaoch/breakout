@@ -9,6 +9,28 @@
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
     <script>
+        var imageFromPath = function(path){
+            var img = new Image()
+            img.src = path
+            return img
+        }
+
+        var Paddle = function() {
+            var img = imageFromPath('paddle.png')
+            var o = {
+                img: img,
+                x: 100,
+                y: 200,
+                speed: 5,
+            }
+            o.moveLeft = function(){
+                o.x -= o.speed
+            }
+            o.moveRight = function(){
+                o.x += o.speed
+            }
+            return o
+        }
         var keyDict = {
             keyUp:['w', 'ArrowUp'],
             keyDown:['s', 'ArrowDown'],
@@ -18,44 +40,39 @@
 
         var canvas = document.querySelector('#id-canvas')
         var content = canvas.getContext('2d')
-        var x = 150
-        var y = 200
         var leftDown = false
         var rightDown = false
-        var speed = 5
 
-        var img = new Image()
-        img.src = 'paddle.png'
-        img.onload = function(){
-            content.drawImage(img, x, y)
+        var __main = function(){
+            window.addEventListener('keydown', function(event){
+                var key = event.key
+                if (keyDict.keyLeft.includes(key)){
+                    leftDown = true
+                } else if (keyDict.keyRight.includes(key)) {
+                    rightDown = true
+                }
+            })
+            window.addEventListener('keyup', function(event){
+              var key = event.key
+              if (keyDict.keyLeft.includes(key)){
+                  leftDown = false
+              } else if (keyDict.keyRight.includes(key)) {
+                  rightDown = false
+              }
+            })
+
+            var paddle = Paddle()
+            setInterval(function(){
+                if (leftDown) {
+                    paddle.moveLeft()
+                } else if (rightDown) {
+                    paddle.moveRight()
+                }
+                content.clearRect(0, 0, canvas.width, canvas.height)
+                content.drawImage(paddle.img, paddle.x, paddle.y)
+            }, 1000/60)
         }
-
-        window.addEventListener('keydown', function(event){
-            var key = event.key
-            if (keyDict.keyLeft.includes(key)){
-                leftDown = true
-            } else if (keyDict.keyRight.includes(key)) {
-                rightDown = true
-            }
-        })
-        window.addEventListener('keyup', function(event){
-          var key = event.key
-          if (keyDict.keyLeft.includes(key)){
-              leftDown = false
-          } else if (keyDict.keyRight.includes(key)) {
-              rightDown = false
-          }
-        })
-
-        setInterval(function(){
-            if (leftDown) {
-                x -= speed
-            } else if (rightDown) {
-                x += speed
-            }
-            content.clearRect(0, 0, canvas.width, canvas.height)
-            content.drawImage(img, x, y)
-        }, 1000/60)
+        __main()
     </script>
 </body>
 </html>
