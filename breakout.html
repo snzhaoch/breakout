@@ -29,6 +29,45 @@
             o.moveRight = function(){
                 o.x += o.speed
             }
+            o.collide = function(ball){
+                if (ball.y + ball.img.height > o.y){
+                    if (ball.x + ball.img.width > o.x && ball.x < o.x + o.img.width) {
+                        return true
+                    }
+                }
+                return false
+            }
+            return o
+        }
+
+        var Ball = function(){
+            var img = imageFromPath('ball.png')
+            var o = {
+                img: img,
+                x: 150,
+                y: 250,
+                speedX: 5,
+                speedY: 5,
+                fired: false,
+            }
+            o.fire = function(){
+                o.fired = true
+            }
+            o.move = function(){
+                if (o.fired) {
+                    if (o.x < 0 || o.x + o.img.width> 400){
+                        o.speedX *= -1
+                    }
+                    if (o.y < 0 || o.y + o.img.height> 300){
+                        o.speedY *= -1
+                    }
+                    o.x += o.speedX
+                    o.y += o.speedY
+                }
+            }
+            o.rebound = function(){
+                o.speedY *= -1
+            }
             return o
         }
 
@@ -72,7 +111,7 @@
                     }
                 }
                 // 火球移动等动作
-                // g.update()
+                g.update()
                 // clear
                 g.content.clearRect(0, 0, canvas.width, canvas.height)
                 // draw
@@ -84,14 +123,26 @@
         var __main = function(){
             var paddle = Paddle()
             var game = Game()
+            var ball = Ball()
             game.registerAction(['a', 'ArrowLeft'], function(){
                 paddle.moveLeft()
             })
             game.registerAction(['d', 'ArrowRight'], function(){
                 paddle.moveRight()
             })
+            game.registerAction(['f'], function(){
+                ball.fire()
+            })
+            game.update = function(){
+                ball.move()
+                // 判断相撞
+                if (paddle.collide(ball) === true){
+                    ball.rebound()
+                }
+            }
             game.draw = function(){
                 game.drawImg(paddle)
+                game.drawImg(ball)
             }
         }
         __main()
