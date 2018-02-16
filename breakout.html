@@ -5,6 +5,7 @@
             border: 1px black solid;
         }
     </style>
+    <script src='utils.js'></script>
 </head>
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
@@ -71,6 +72,25 @@
             return o
         }
 
+        var Block = function(){
+            var img = imageFromPath('block.png')
+            var o = {
+                img: img,
+                x: 0,
+                y: 0,
+                // w: 50,
+                // h: 20,
+                alive: true,
+              }
+              o.kill = function(){
+                  o.alive = false
+              }
+              o.collide = function(ball){
+                  return  o.alive && (rectIntersects(o, ball) || rectIntersects(ball, o))
+              }
+            return o
+        }
+
         var Game = function(){
             var g = {
                 actions: {},
@@ -124,6 +144,8 @@
             var paddle = Paddle()
             var game = Game()
             var ball = Ball()
+            var block = Block()
+
             game.registerAction(['a', 'ArrowLeft'], function(){
                 paddle.moveLeft()
             })
@@ -139,10 +161,18 @@
                 if (paddle.collide(ball) === true){
                     ball.rebound()
                 }
+                if (block.collide(ball) === true){
+                    ball.rebound()
+                    block.kill()
+                }
             }
             game.draw = function(){
                 game.drawImg(paddle)
                 game.drawImg(ball)
+                if (block.alive){
+                      // log(123)
+                    game.drawImg(block)
+                }
             }
         }
         __main()
