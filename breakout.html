@@ -5,186 +5,21 @@
             border: 1px black solid;
         }
     </style>
+    <script src='game.js'></script>
+    <script src='paddle.js'></script>
+    <script src='block.js'></script>
+    <script src='ball.js'></script>
+    <script src='level.js'></script>
     <script src='utils.js'></script>
 </head>
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
     <input type='range' min=1></input>
     <script>
-        var levels = [
-          [
-            [0, 0, 1],
-            [100, 0, 2],
-          ],
-          [
-            [0, 0, 1],
-            [100, 0, 2],
-            [200, 0, 3],
-            [300, 0, 3],
-          ],
-          [
-            [0, 0, 1],
-            [100, 0, 2],
-            [200, 0, 3],
-            [300, 0, 3],
-            [0, 100, 1],
-            [100, 100, 2],
-            [200, 100, 3],
-            [300, 100, 3],
-          ],
-        ]
-
-        var loadLevel = function(level){
-          // 载入关卡
-            var positions = levels[level-1]
-            var blocks = []
-            var block_num = positions.length
-            for (var i = 0; i < block_num; i++){
-              var b = Block(positions[i])
-              blocks.push(b)
-            }
-            return blocks
-        }
-
-        var Paddle = function(){
-            var img = imageFromPath('paddle.png')
-            var o = {
-                img: img,
-                x: 100,
-                y: 280,
-                speed: 5,
-            }
-            o.moveLeft = function(){
-                o.x -= o.speed
-            }
-            o.moveRight = function(){
-                o.x += o.speed
-            }
-            o.collide = function(ball){
-                if (ball.y + ball.img.height > o.y){
-                    if (ball.x + ball.img.width > o.x && ball.x < o.x + o.img.width) {
-                        return true
-                    }
-                }
-                return false
-            }
-            return o
-        }
-
-        var Ball = function(){
-            var img = imageFromPath('ball.png')
-            var o = {
-                img: img,
-                x: 150,
-                y: 240,
-                speedX: 5,
-                speedY: 5,
-                fired: false,
-            }
-            o.fire = function(){
-                o.fired = true
-            }
-            o.move = function(){
-                if (o.fired) {
-                    if (o.x < 0 || o.x + o.img.width> 400){
-                        o.speedX *= -1
-                    }
-                    if (o.y < 0 || o.y + o.img.height> 300){
-                        o.speedY *= -1
-                    }
-                    o.x += o.speedX
-                    o.y += o.speedY
-                }
-            }
-            o.rebound = function(){
-                o.speedY *= -1
-            }
-            return o
-        }
-
-        var Block = function(position){
-
-            var p = position
-            var img = imageFromPath('block.png')
-            var o = {
-                img: img,
-                x: p[0],
-                y: p[1],
-                // w: 50,
-                // h: 20,
-                alive: true,
-                hp: p[2],
-              }
-              o.hit = function(){
-                  o.hp -= 1
-                  if (o.hp < 1){
-                      o.alive = false
-                  }
-              }
-              o.collide = function(ball){
-                  return  o.alive && (rectIntersects(o, ball) || rectIntersects(ball, o))
-              }
-            return o
-        }
-
-        var Game = function(){
-            var g = {
-                actions: {},
-                keydowns: {},
-            }
-            var canvas = document.querySelector('#id-canvas')
-            var content = canvas.getContext('2d')
-            g.canvas = canvas
-            g.content = content
-            // drawImage
-            g.drawImg = function(img){
-                g.content.drawImage(img.img, img.x, img.y)
-            }
-            // events
-            window.addEventListener('keydown', function(event){
-                g.keydowns[event.key] = true
-            })
-            window.addEventListener('keyup', function(event){
-                g.keydowns[event.key] = false
-            })
-            // register function
-            g.registerAction = function(keys, func){
-                for (var i = 0; i < keys.length; i++){
-                    var key = keys[i]
-                    g.actions[key] = func
-                }
-            }
-            // loop
-            var runloop = function(){
-                var actions = Object.keys(g.actions)
-                for (var i = 0; i < actions.length; i++){
-                    var key = actions[i]
-                    var func = g.actions[key]
-                    if (g.keydowns[key] != undefined && g.keydowns[key]!= false){
-                        console.log(key, func);
-                        func()
-                    }
-                }
-                // 火球移动等动作
-                g.update()
-                // clear
-                g.content.clearRect(0, 0, canvas.width, canvas.height)
-                // draw
-                g.draw()
-                loop()
-            }
-            var loop = function(){
-                setTimeout(function(){
-                    runloop()
-                }, 1000/window.fps)
-            }
-            loop()
-            return g
-        }
-
         var __main = function(){
             // 设置 fps 默认值
             window.fps = 100
+
             // 初始化对象
             var paddle = Paddle()
             var game = Game()
@@ -197,7 +32,7 @@
             var level = 1
             var blocks = loadLevel(level)
 
-
+            //  注册按键及响应事件
             game.registerAction(['a', 'ArrowLeft'], function(){
                 paddle.moveLeft()
             })
@@ -224,6 +59,8 @@
                     alert(`没有第${l}关卡！(关卡最大为${l_max})`)
                 }
             })
+
+            //  fps 绑定滑动条
             var f = document.querySelector('input')
             f.addEventListener('change', function(event){
                 console.log('change');
