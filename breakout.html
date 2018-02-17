@@ -10,10 +10,39 @@
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
     <script>
-        var imageFromPath = function(path){
-            var img = new Image()
-            img.src = path
-            return img
+        var levels = [
+          [
+            [0, 0, 1],
+            [100, 0, 2],
+          ],
+          [
+            [0, 0, 1],
+            [100, 0, 2],
+            [200, 0, 3],
+            [300, 0, 3],
+          ],
+          [
+            [0, 0, 1],
+            [100, 0, 2],
+            [200, 0, 3],
+            [300, 0, 3],
+            [0, 100, 1],
+            [100, 100, 2],
+            [200, 100, 3],
+            [300, 100, 3],
+          ],
+        ]
+
+        var loadLevel = function(level){
+          // 载入关卡
+            var positions = levels[level-1]
+            var blocks = []
+            var block_num = positions.length
+            for (var i = 0; i < block_num; i++){
+              var b = Block(positions[i])
+              blocks.push(b)
+            }
+            return blocks
         }
 
         var Paddle = function(){
@@ -72,16 +101,18 @@
             return o
         }
 
-        var Block = function(){
+        var Block = function(position){
+
+            var p = position
             var img = imageFromPath('block.png')
             var o = {
                 img: img,
-                x: 0,
-                y: 0,
+                x: p[0],
+                y: p[1],
                 // w: 50,
                 // h: 20,
                 alive: true,
-                hp: 3,
+                hp: p[2],
               }
               o.hit = function(){
                   o.hp -= 1
@@ -151,14 +182,9 @@
 
             var pause = false
 
-            var blocks = []
-            for (var i = 0; i < 3; i++){
-                var b = Block()
-                b.hp = i + 1
-                b.x += 150 * (i )
-                b.y += 50 * (i )
-                blocks.push(b)
-            }
+            var level = 1
+            var blocks = loadLevel(level)
+
 
             game.registerAction(['a', 'ArrowLeft'], function(){
                 paddle.moveLeft()
@@ -170,10 +196,23 @@
                 ball.fire()
             })
             window.addEventListener('keydown', function(event){
+                // 暂停和恢复功能
+                console.log(event);
                 if (event.key === 'p'){
                     pause = !pause
                 }
+                // 载入新关卡
+                var l = Number(event.key)
+                var l_max = levels.length
+                if (0 < l && l < l_max + 1){
+                    level = l
+                    console.log(level);
+                    blocks = loadLevel(level)
+                } else if (l > l_max) {
+                    alert(`没有第${l}关卡！(关卡最大为${l_max})`)
+                }
             })
+
             game.update = function(){
                 if (pause === true){
                     return
@@ -196,6 +235,7 @@
                 game.drawImg(paddle)
                 game.drawImg(ball)
 
+                // draw blocks
                 for (var i = 0; i < blocks.length; i++){
                     var b = blocks[i]
                     if (b.alive){
