@@ -81,9 +81,13 @@
                 // w: 50,
                 // h: 20,
                 alive: true,
+                hp: 3,
               }
-              o.kill = function(){
-                  o.alive = false
+              o.hit = function(){
+                  o.hp -= 1
+                  if (o.hp < 1){
+                      o.alive = false
+                  }
               }
               o.collide = function(ball){
                   return  o.alive && (rectIntersects(o, ball) || rectIntersects(ball, o))
@@ -144,7 +148,17 @@
             var paddle = Paddle()
             var game = Game()
             var ball = Ball()
-            var block = Block()
+
+            var pause = false
+
+            var blocks = []
+            for (var i = 0; i < 3; i++){
+                var b = Block()
+                b.hp = i + 1
+                b.x += 150 * (i )
+                b.y += 50 * (i )
+                blocks.push(b)
+            }
 
             game.registerAction(['a', 'ArrowLeft'], function(){
                 paddle.moveLeft()
@@ -155,26 +169,42 @@
             game.registerAction(['f'], function(){
                 ball.fire()
             })
+            window.addEventListener('keydown', function(event){
+                if (event.key === 'p'){
+                    pause = !pause
+                }
+            })
             game.update = function(){
+                if (pause === true){
+                    return
+                }
                 ball.move()
                 // 判断相撞
                 if (paddle.collide(ball) === true){
                     ball.rebound()
                 }
-                if (block.collide(ball) === true){
-                    ball.rebound()
-                    block.kill()
+                for (var i = 0; i < blocks.length; i++){
+                    var b = blocks[i]
+                    if (b.collide(ball) === true){
+                        ball.rebound()
+                        b.hit()
+                        console.log(b);
+                    }
                 }
             }
             game.draw = function(){
                 game.drawImg(paddle)
                 game.drawImg(ball)
-                if (block.alive){
-                      // log(123)
-                    game.drawImg(block)
+
+                for (var i = 0; i < blocks.length; i++){
+                    var b = blocks[i]
+                    if (b.alive){
+                        game.drawImg(b)
+                    }
                 }
             }
         }
+
         __main()
     </script>
 </body>
