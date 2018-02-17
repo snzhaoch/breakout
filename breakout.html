@@ -9,6 +9,7 @@
 </head>
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
+    <input type='range' min=1></input>
     <script>
         var levels = [
           [
@@ -50,7 +51,7 @@
             var o = {
                 img: img,
                 x: 100,
-                y: 200,
+                y: 280,
                 speed: 5,
             }
             o.moveLeft = function(){
@@ -75,7 +76,7 @@
             var o = {
                 img: img,
                 x: 150,
-                y: 250,
+                y: 240,
                 speedX: 5,
                 speedY: 5,
                 fired: false,
@@ -153,9 +154,8 @@
                     g.actions[key] = func
                 }
             }
-            // timer
-            setInterval(function(){
-                // events
+            // loop
+            var runloop = function(){
                 var actions = Object.keys(g.actions)
                 for (var i = 0; i < actions.length; i++){
                     var key = actions[i]
@@ -171,17 +171,29 @@
                 g.content.clearRect(0, 0, canvas.width, canvas.height)
                 // draw
                 g.draw()
-            }, 1000/60)
+                loop()
+            }
+            var loop = function(){
+                setTimeout(function(){
+                    runloop()
+                }, 1000/window.fps)
+            }
+            loop()
             return g
         }
 
         var __main = function(){
+            // 设置 fps 默认值
+            window.fps = 100
+            // 初始化对象
             var paddle = Paddle()
             var game = Game()
             var ball = Ball()
 
+            // 设置暂停初始值
             var pause = false
 
+            // 载入默认关卡
             var level = 1
             var blocks = loadLevel(level)
 
@@ -211,6 +223,11 @@
                 } else if (l > l_max) {
                     alert(`没有第${l}关卡！(关卡最大为${l_max})`)
                 }
+            })
+            var f = document.querySelector('input')
+            f.addEventListener('change', function(event){
+                console.log('change');
+                window.fps = Number(document.querySelector('input').value)
             })
 
             game.update = function(){
