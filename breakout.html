@@ -28,6 +28,9 @@
             // 设置暂停初始值
             var pause = false
 
+            // 分数初始值
+            var score = 0
+
             // 载入默认关卡
             var level = 1
             var blocks = loadLevel(level)
@@ -53,7 +56,6 @@
                 var l_max = levels.length
                 if (0 < l && l < l_max + 1){
                     level = l
-                    console.log(level);
                     blocks = loadLevel(level)
                 } else if (l > l_max) {
                     alert(`没有第${l}关卡！(关卡最大为${l_max})`)
@@ -63,7 +65,6 @@
             //  fps 绑定滑动条
             var f = document.querySelector('input')
             f.addEventListener('change', function(event){
-                console.log('change');
                 window.fps = Number(document.querySelector('input').value)
             })
 
@@ -81,7 +82,7 @@
                     if (b.collide(ball) === true){
                         ball.rebound()
                         b.hit()
-                        console.log(b);
+                        score += 10
                     }
                 }
             }
@@ -96,6 +97,9 @@
                         game.drawImg(b)
                     }
                 }
+
+                // draw score
+                game.content.fillText(`score: ${score}`, 10, 290)
             }
         }
 
