@@ -1,7 +1,7 @@
-var Block = function(position){
+var Block = function(position, game){
 
     var p = position
-    var img = imageFromPath('block.png')
+    var img = game.imageFromName('block')
     var o = {
         img: img,
         x: p[0],

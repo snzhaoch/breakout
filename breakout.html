@@ -5,12 +5,14 @@
             border: 1px black solid;
         }
     </style>
+    <script src='utils.js'></script>
+    <script src='level.js'></script>
     <script src='game.js'></script>
     <script src='paddle.js'></script>
     <script src='block.js'></script>
     <script src='ball.js'></script>
-    <script src='level.js'></script>
-    <script src='utils.js'></script>
+
+
 </head>
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
@@ -20,10 +22,16 @@
             // 设置 fps 默认值
             window.fps = 100
 
+            var imgs = {
+                'paddle': 'paddle.png',
+                'ball': 'ball.png',
+                'block': 'block.png',
+            }
+
             // 初始化对象
-            var paddle = Paddle()
-            var game = Game()
-            var ball = Ball()
+            var game = Game(imgs)
+            var paddle = Paddle(game)
+            var ball = Ball(game)
 
             // 设置暂停初始值
             var pause = false
@@ -33,7 +41,7 @@
 
             // 载入默认关卡
             var level = 1
-            var blocks = loadLevel(level)
+            var blocks = loadLevel(level, game)
 
             //  注册按键及响应事件
             game.registerAction(['a', 'ArrowLeft'], function(){
@@ -56,7 +64,7 @@
                 var l_max = levels.length
                 if (0 < l && l < l_max + 1){
                     level = l
-                    blocks = loadLevel(level)
+                    blocks = loadLevel(level, game)
                 } else if (l > l_max) {
                     alert(`没有第${l}关卡！(关卡最大为${l_max})`)
                 }
@@ -104,6 +112,7 @@
         }
 
         __main()
+
     </script>
 </body>
 </html>

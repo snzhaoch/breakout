@@ -1,5 +1,7 @@
-var Ball = function(){
-    var img = imageFromPath('ball.png')
+var Ball = function(game){
+    var img = game.imageFromName('ball')
+    log(game)
+    console.log(img);
     var o = {
         img: img,
         x: 150,

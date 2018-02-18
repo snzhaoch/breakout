@@ -6,13 +6,13 @@ var imageFromPath = function(path){
     return img
 }
 
-var loadLevel = function(level){
+var loadLevel = function(level, game){
   // 载入关卡
     var positions = levels[level-1]
     var blocks = []
     var block_num = positions.length
     for (var i = 0; i < block_num; i++){
-      var b = Block(positions[i])
+      var b = Block(positions[i], game)
       blocks.push(b)
     }
     return blocks

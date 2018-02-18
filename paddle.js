@@ -1,5 +1,5 @@
-var Paddle = function(){
-    var img = imageFromPath('paddle.png')
+var Paddle = function(game){
+    var img = game.imageFromName('paddle')
     var o = {
         img: img,
         x: 100,

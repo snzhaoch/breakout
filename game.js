@@ -1,8 +1,11 @@
-var Game = function(){
+var Game = function(imgs){
+    // imgs 是一个对象，里面是图片的名称和引用路径
     var g = {
         actions: {},
         keydowns: {},
+        imgs: {},
     }
+
     var canvas = document.querySelector('#id-canvas')
     var content = canvas.getContext('2d')
     g.canvas = canvas
@@ -25,6 +28,27 @@ var Game = function(){
             g.actions[key] = func
         }
     }
+    g.imageFromName = function(name){
+        return g.imgs[name]
+    }
+    // 预先载入所有图片，完成后执行程序
+    var onload_num = []
+    var names = Object.keys(imgs)
+    for (var i = 0; i < names.length; i++){
+        var name = names[i]
+        var path = imgs[name]
+        var img = new Image()
+        img.src = path
+        // 将 img 保存
+        g.imgs[name] = img
+        img.onload = function(){
+            // js 图片载入是异步事件，需要判断是否所有图片加载成功
+            onload_num.push(1)
+            if  (onload_num.length === names.length){
+                run()
+            }
+        }
+    }
     // loop
     var runloop = function(){
         var actions = Object.keys(g.actions)
@@ -36,19 +60,19 @@ var Game = function(){
                 func()
             }
         }
-        // 火球移动等动作
-        g.update()
         // clear
         g.content.clearRect(0, 0, canvas.width, canvas.height)
+        // 火球移动等动作
+        g.update()
         // draw
         g.draw()
-        loop()
+        run()
     }
-    var loop = function(){
+    // run()
+    var run = function(){
         setTimeout(function(){
             runloop()
         }, 1000/window.fps)
     }
-    loop()
     return g
 }
