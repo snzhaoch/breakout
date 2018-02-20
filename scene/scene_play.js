@@ -1,4 +1,4 @@
-var Scene = function(game) {
+var ScenePlay = function(game) {
     var s = {
         game: game,
     }
@@ -89,6 +89,11 @@ var Scene = function(game) {
                 b.hit()
                 score += 10
             }
+        }
+        // 判断游戏结束
+        if (ball.y > paddle.y) {
+            var s = SceneEnd(game)
+            game.changeScene(s)
         }
     }
     s.draw = function() {

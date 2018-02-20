@@ -10,7 +10,9 @@
     <script src='game/paddle.js'></script>
     <script src='game/block.js'></script>
     <script src='game/ball.js'></script>
+    <script src='scene/scene_start.js'></script>
     <script src='scene/scene_play.js'></script>
+    <script src='scene/scene_end.js'></script>
     <script src='level.js'></script>
 </head>
 <body>
@@ -28,7 +30,7 @@
             }
 
             var game = Game(imgs)
-            var scene = Scene(game)
+            var scene = SceneStart(game)
             game.scene = scene
         }
 

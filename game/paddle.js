@@ -3,7 +3,7 @@ var Paddle = function(game){
     var o = {
         img: img,
         x: 100,
-        y: 280,
+        y: 270,
         speed: 5,
     }
     o.moveLeft = function(){
