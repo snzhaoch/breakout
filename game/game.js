@@ -63,7 +63,7 @@ var Game = function(imgs){
                 func()
             }
         }
-        // clear
+        // ]clear
         g.content.clearRect(0, 0, canvas.width, canvas.height)
         // 火球移动等动作
         g.scene.update()
