@@ -31,6 +31,9 @@ var Game = function(imgs){
     g.imageFromName = function(name){
         return g.imgs[name]
     }
+    g.changeScene = function(scene) {
+        g.scene = scene
+    }
     // 预先载入所有图片，完成后执行程序
     var onload_num = []
     var names = Object.keys(imgs)
@@ -45,7 +48,7 @@ var Game = function(imgs){
             // js 图片载入是异步事件，需要判断是否所有图片加载成功
             onload_num.push(1)
             if  (onload_num.length === names.length){
-                run()
+                runWithScene(g.scene)
             }
         }
     }
@@ -63,16 +66,20 @@ var Game = function(imgs){
         // clear
         g.content.clearRect(0, 0, canvas.width, canvas.height)
         // 火球移动等动作
-        g.update()
+        g.scene.update()
         // draw
-        g.draw()
-        run()
+        g.scene.draw()
+        runWithScene(g.scene)
     }
     // run()
-    var run = function(){
+    var runWithScene = function(scene){
+        g.scene = scene
         setTimeout(function(){
             runloop()
         }, 1000/window.fps)
     }
+
+
+
     return g
 }
