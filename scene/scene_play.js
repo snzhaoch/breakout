@@ -1,6 +1,7 @@
 var ScenePlay = function(game) {
     var s = {
         game: game,
+        events: {},
     }
 
     // 初始化场景对象
@@ -29,7 +30,7 @@ var ScenePlay = function(game) {
     })
     window.addEventListener('keydown', function(event){
         // 暂停和恢复功能
-        console.log(event);
+        // s.eventKey.push('keydown')
         if (event.key === 'p'){
             pause = !pause
         }
