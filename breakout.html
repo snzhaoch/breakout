@@ -19,25 +19,6 @@
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
     <input type='range' min=1></input>
-    <script>
-        var __main = function(){
-            // 设置 fps 默认值
-            window.fps = 100
-
-            var imgs = {
-                'paddle': 'img/paddle.png',
-                'ball': 'img/ball.png',
-                'block': 'img/block.png',
-            }
-
-            var game = new Game(imgs)
-            var scene = new SceneStart(game)
-            game.scene = scene
-            log(game)
-        }
-
-        __main()
-
-    </script>
+    <script src='main.js' charset=”utf-8″></script>
 </body>
 </html>
