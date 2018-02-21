@@ -30,9 +30,10 @@
                 'block': 'img/block.png',
             }
 
-            var game = Game(imgs)
+            var game = new Game(imgs)
             var scene = new SceneStart(game)
             game.scene = scene
+            log(game)
         }
 
         __main()
