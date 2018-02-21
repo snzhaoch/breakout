@@ -1,8 +1,6 @@
 var Game = function(imgs){
     // imgs 是一个对象，里面是图片的名称和引用路径
     var g = {
-        actions: {},
-        keydowns: {},
         imgs: {},
     }
 
@@ -10,29 +8,17 @@ var Game = function(imgs){
     var content = canvas.getContext('2d')
     g.canvas = canvas
     g.content = content
-    // drawImage
     g.drawImg = function(img){
         g.content.drawImage(img.img, img.x, img.y)
     }
-    // events
-    window.addEventListener('keydown', function(event){
-        g.keydowns[event.key] = true
-    })
-    window.addEventListener('keyup', function(event){
-        g.keydowns[event.key] = false
-    })
-    // register function
-    g.registerAction = function(keys, func){
-        for (var i = 0; i < keys.length; i++){
-            var key = keys[i]
-            g.actions[key] = func
-        }
-    }
-    g.imageFromName = function(name){
+    g.imageFromName = function(name) {
         return g.imgs[name]
     }
     g.changeScene = function(scene) {
         g.scene = scene
+    }
+    g.clearScene = function() {
+        g.content.clearRect(0, 0, canvas.width, canvas.height)
     }
     // 预先载入所有图片，完成后执行程序
     var onload_num = []
@@ -54,17 +40,17 @@ var Game = function(imgs){
     }
     // loop
     var runloop = function(){
-        var actions = Object.keys(g.actions)
+        var actions = Object.keys(g.scene.actions)
         for (var i = 0; i < actions.length; i++){
             var key = actions[i]
-            var func = g.actions[key]
-            if (g.keydowns[key] != undefined && g.keydowns[key]!= false){
+            var func = g.scene.actions[key]
+            if (g.scene.keydowns[key] != undefined && g.scene.keydowns[key]!= false){
                 console.log(key, func);
                 func()
             }
         }
-        // ]clear
-        g.content.clearRect(0, 0, canvas.width, canvas.height)
+        // clear
+        g.clearScene()
         // 火球移动等动作
         g.scene.update()
         // draw
@@ -78,8 +64,6 @@ var Game = function(imgs){
             runloop()
         }, 1000/window.fps)
     }
-
-
 
     return g
 }

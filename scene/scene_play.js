@@ -1,6 +1,8 @@
 var ScenePlay = function(game) {
     var s = {
         game: game,
+        actions: {},
+        keydowns: {},
     }
 
     // 初始化场景对象
@@ -17,32 +19,44 @@ var ScenePlay = function(game) {
     // 设置暂停初始值
     var pause = false
 
+    s.registerAction = function(keys, func) {
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i]
+          s.actions[k] = func
+        }
+    }
+    window.addEventListener('keydown', function(event) {
+        var k = event.key
+        s.keydowns[k] = true
+    })
+    window.addEventListener('keyup', function(event) {
+        var k = event.key
+        s.keydowns[k] = false
+    })
     //  注册按键及响应事件
-    game.registerAction(['a', 'ArrowLeft'], function(){
+    s.registerAction(['a', 'ArrowLeft'], function(){
         paddle.moveLeft()
     })
-    game.registerAction(['d', 'ArrowRight'], function(){
+    s.registerAction(['d', 'ArrowRight'], function(){
         paddle.moveRight()
     })
-    game.registerAction(['f'], function(){
+    s.registerAction(['f'], function(){
         ball.fire()
     })
-    window.addEventListener('keydown', function(event){
-        // 暂停和恢复功能
-        console.log(event);
-        if (event.key === 'p'){
-            pause = !pause
-        }
-        // 载入新关卡
-        var l = Number(event.key)
-        var l_max = levels.length
-        if (0 < l && l < l_max + 1){
-            level = l
-            blocks = loadLevel(level, game)
-        } else if (l > l_max) {
-            alert(`没有第${l}关卡！(关卡最大为${l_max})`)
-        }
+    // 暂停和恢复功能
+    s.registerAction(['p'], function(){
+        pause = !pause
     })
+    // 载入新关卡
+    var level_array = Array.from({length: levels.length}, (v, i) => i)
+    for (var i = 0; i < level_array.length; i++) {
+        let level = level_array[i] + 1
+        s.registerAction([level], function(){
+            loadLevel(level, game)
+            blocks = loadLevel(level, game)
+
+        })
+    }
 
     //  fps 绑定滑动条
     var f = document.querySelector('input')
