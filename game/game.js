@@ -40,14 +40,28 @@ var Game = function(imgs){
     }
     // loop
     var runloop = function(){
-        var actions = Object.keys(g.scene.actions)
+        var scene = g.scene
+        var actions = Object.keys(scene.actions)
+        // log(actions)
         for (var i = 0; i < actions.length; i++){
             var key = actions[i]
-            var func = g.scene.actions[key]
-            if (g.scene.keydowns[key] != undefined && g.scene.keydowns[key]!= false){
-                console.log(key, func);
-                func()
+            var action = scene.actions[key]
+            var func = action.func
+            var sleeptime = action.sleeptime
+            var sleeping = action.sleeping
+            if (scene.keydowns[key]){
+                if (sleeping === false || sleeping >= sleeptime){
+                    func()
+                }
+                if (sleeping >= sleeptime){
+                    action.sleeping = 0
+                }
             }
+            // func cd
+            if (sleeping !== false && sleeping < sleeptime) {
+                action.sleeping += 1/window.fps
+            }
+
         }
         // clear
         g.clearScene()

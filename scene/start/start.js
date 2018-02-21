@@ -12,10 +12,22 @@ var SceneStart = function(game) {
     //     }
     // })
 
-    s.registerAction = function(keys, func) {
+    s.registerAction = function(keys, func, sleeptime) {
         for (var i = 0; i < keys.length; i++) {
           var k = keys[i]
-          s.actions[k] = func
+          if (sleeptime) {
+              s.actions[k] = {
+                func: func,
+                sleeptime: sleep,
+                sleeping: 0,
+              }
+          } else {
+              s.actions[k] = {
+                  func: func,
+                  sleeptime: null,
+                  sleeping: false,
+              }
+          }
         }
     }
     window.addEventListener('keydown', function(event) {

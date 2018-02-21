@@ -19,10 +19,22 @@ var ScenePlay = function(game) {
     // 设置暂停初始值
     var pause = false
 
-    s.registerAction = function(keys, func) {
+    s.registerAction = function(keys, func, sleeptime) {
         for (var i = 0; i < keys.length; i++) {
           var k = keys[i]
-          s.actions[k] = func
+          if (sleeptime) {
+              s.actions[k] = {
+                func: func,
+                sleeptime: sleeptime,
+                sleeping: 0,
+              }
+          } else {
+              s.actions[k] = {
+                  func: func,
+                  sleeptime: null,
+                  sleeping: false,
+              }
+          }
         }
     }
     window.addEventListener('keydown', function(event) {
@@ -46,16 +58,14 @@ var ScenePlay = function(game) {
     // 暂停和恢复功能
     s.registerAction(['p'], function(){
         pause = !pause
-    })
+    }, 0.1)
     // 载入新关卡
     var level_array = Array.from({length: levels.length}, (v, i) => i)
     for (var i = 0; i < level_array.length; i++) {
         let level = level_array[i] + 1
         s.registerAction([level], function(){
-            loadLevel(level, game)
             blocks = loadLevel(level, game)
-
-        })
+        }, 0.1)
     }
 
     //  fps 绑定滑动条
