@@ -30,6 +30,7 @@ class SceneEdit extends Scene {
             }
             var x = event.offsetX
             var y = event.offsetY
+            log(x, y)
             for (var i = 0; i < _this.blocks.length; i++) {
                 var b = _this.blocks[i]
                 if (b.hasPoint(x, y)) {
@@ -51,6 +52,7 @@ class SceneEdit extends Scene {
                 }
             }
             _this.save(level, position)
+            alert('保存成功')
         })
 
         var addButton = document.querySelector('#id-level-add')
@@ -91,6 +93,13 @@ class SceneEdit extends Scene {
                 this.game.drawImg(b)
             }
         }
+
+        this.game.content.moveTo(0, 200)
+        this.game.content.lineTo(400, 200)
+        this.game.content.stroke()
+
+        this.game.content.fillText('在此区域编辑关卡', 160, 120)
+        this.game.content.fillText('摁 Y 开始游戏', 170, 260)
     }
     save(level, blocks) {
         levels[level-1] = blocks

@@ -16,6 +16,7 @@ class SceneStart extends Scene {
         })
     }
     draw() {
-        this.game.content.fillText('摁 Y 游戏开始', 170, 150)
+        this.game.content.fillText('摁 Y 游戏开始', 170, 140)
+        this.game.content.fillText('摁 E 编辑游戏关卡', 160, 160)
     }
 }
