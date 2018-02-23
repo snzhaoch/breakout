@@ -4,7 +4,7 @@
         canvas {
             border: 1px black solid;
         }
-        #id-save-button, #id-level-choice {
+        .edit {
             display: none
         }
     </style>
@@ -26,10 +26,14 @@
     <canvas id="id-canvas" width="400" height="300"></canvas>
     </br>
     <input type='range' min=1></input>
-    <h3 id="id-level-choice">选择关卡</h3>
+    <h3 class="edit" id="id-level-choice">选择关卡</h3>
     <div id="id-level-div"></div>
     </br>
-    <input type="button" id="id-save-button" value="保存关卡数据"></input>
+    <input class="edit" type="button" id="id-level-save" value="保存关卡数据"></input>
+    </br>
+    <input class="edit" type="button" id="id-level-add" value="增加关卡"></input>
+    </br>
+    <input class="edit" type="button" id="id-level-delete" value="删除选中关卡"></input>
     <script src='main.js' charset=”utf-8″></script>
 </body>
 </html>

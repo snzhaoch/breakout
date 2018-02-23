@@ -4,7 +4,7 @@ class SceneEdit extends Scene {
         this.colume = 7
         this.row = 10
         this.blocks = []
-        this.level = 0
+        this.level = -1
         this.init()
     }
     init() {
@@ -24,19 +24,21 @@ class SceneEdit extends Scene {
 
         var _this = this
         this.game.canvas.addEventListener('mousedown', function(event){
+            if (_this.level === -1){
+                alert('请先选择关卡！')
+                return
+            }
             var x = event.offsetX
             var y = event.offsetY
             for (var i = 0; i < _this.blocks.length; i++) {
                 var b = _this.blocks[i]
                 if (b.hasPoint(x, y)) {
                     b.alive = !b.alive
-                    // b.alive = true
                 }
             }
         })
 
-        var saveButton = document.querySelector('#id-save-button')
-        saveButton.attributes.display = 'block'
+        var saveButton = document.querySelector('#id-level-save')
         saveButton.addEventListener('click', function(){
             var level = _this.level
             var blocks = _this.blocks
@@ -49,6 +51,27 @@ class SceneEdit extends Scene {
                 }
             }
             _this.save(level, position)
+        })
+
+        var addButton = document.querySelector('#id-level-add')
+        addButton.addEventListener('click', function(){
+            levels.push([])
+            _this.clearLevelDiv()
+            _this.displayLevel()
+        })
+
+        var deleteButton = document.querySelector('#id-level-delete')
+        deleteButton.addEventListener('click', function(){
+            var l = _this.level
+            if (l === -1) {
+                alert('请先选中关卡！')
+                return
+            }
+            levels.splice(l-1, 1)
+            _this.clearLevelDiv()
+            _this.clearBlock()
+            _this.displayLevel()
+            _this.level = -1
         })
 
         this.registerAction(['y', 'Y'], function() {
@@ -140,13 +163,21 @@ class SceneEdit extends Scene {
             'inline-block': [],
         }
         var h3 = document.querySelector('#id-level-choice')
-        var button = document.querySelector('#id-save-button')
+        var saveButton = document.querySelector('#id-level-save')
+        var addButton = document.querySelector('#id-level-add')
+        var deleteButton = document.querySelector('#id-level-delete')
         es['block'].push(h3)
-        es['block'].push(button)
+        es['block'].push(saveButton)
+        es['block'].push(addButton)
+        es['block'].push(deleteButton)
         for (var i = 0; i < levels.length; i++) {
             var l = document.querySelector(`#id-level-${i+1}`)
             es['inline-block'].push(l)
         }
         return es
+    }
+    clearLevelDiv() {
+        var levelDiv = document.querySelector('#id-level-div')
+        levelDiv.innerHTML = ''
     }
 }
