@@ -9,6 +9,7 @@ class SceneEdit extends Scene {
     }
     init() {
         super.init()
+        this.displayInfo()
         for (var i = 0; i < this.row; i++) {
             for (var v = 0; v < this.colume; v++) {
                 var img = this.game.imageFromName('block')
@@ -35,7 +36,7 @@ class SceneEdit extends Scene {
         })
 
         var saveButton = document.querySelector('#id-save-button')
-        saveButton.attributes.visibility = 'visible'
+        saveButton.attributes.display = 'block'
         saveButton.addEventListener('click', function(){
             var level = _this.level
             var blocks = _this.blocks
@@ -50,34 +51,8 @@ class SceneEdit extends Scene {
             _this.save(level, position)
         })
 
-        var levelDiv = document.querySelector('#id-level-div')
-        for (var i = 0; i < levels.length; i++) {
-            var t = this.levelTemplate(i+1)
-            levelDiv.insertAdjacentHTML('beforeend', t)
-            let l = document.querySelector(`#id-level-${i+1}`)
-            l.addEventListener('click', function(){
-                _this.clearBlock()
-                _this.level = l.value
-                var blockPosition = levels[l.value-1]
-                for (var v = 0; v < blockPosition.length; v++){
-                    var b = blockPosition[v]
-                    var x = b[0]
-                    var y = b[1]
-                    for (var s = 0; s < _this.blocks.length; s++) {
-                        var b = _this.blocks[s]
-                        if (b.hasPoint(x, y)) {
-                            log(true)
-                            log(b)
-                            b.alive = true
-                        }
-                    }
-                }
-            })
-        }
-
-
-
         this.registerAction(['y', 'Y'], function() {
+            _this.hiddenInfo()
             var s = new ScenePlay(_this.game)
             _this.game.changeScene(s)
         })
@@ -103,10 +78,75 @@ class SceneEdit extends Scene {
             b.alive = false
         }
     }
+    displayInfo() {
+        this.displayLevel()
+        var es = this.achieveElements()
+        var types = Object.keys(es)
+        for (var i = 0; i < types.length; i++) {
+            var t = types[i]
+            var _es = es[t]
+            for (var i = 0; i < _es.length; i++) {
+                var e = _es[i]
+                e.style.display = t
+            }
+        }
+    }
+    hiddenInfo() {
+        var es = this.achieveElements()
+        var types = Object.keys(es)
+        for (var i = 0; i < types.length; i++) {
+            var t = types[i]
+            var _es = es[t]
+            for (var v = 0; v < _es.length; v++) {
+                var e = _es[v]
+                e.style.display = 'none'
+            }
+        }
+    }
     levelTemplate(level) {
         var t = `
-        <input type="button" id="id-level-${level}" value="${level}"></input>
+        <input type="button" id="id-level-${level}" value="${level}" class="level"></input>
         `
         return t
+    }
+    displayLevel() {
+        var _this = this
+        var levelDiv = document.querySelector('#id-level-div')
+        for (var i = 0; i < levels.length; i++) {
+            var t = this.levelTemplate(i+1)
+            levelDiv.insertAdjacentHTML('beforeend', t)
+            let l = document.querySelector(`#id-level-${i+1}`)
+            l.addEventListener('click', function(){
+                _this.clearBlock()
+                _this.level = l.value
+                var blockPosition = levels[l.value-1]
+                for (var v = 0; v < blockPosition.length; v++){
+                    var b = blockPosition[v]
+                    var x = b[0]
+                    var y = b[1]
+                    for (var s = 0; s < _this.blocks.length; s++) {
+                        var b = _this.blocks[s]
+                        if (b.hasPoint(x, y)) {
+                            b.alive = true
+                        }
+                    }
+                }
+            })
+        }
+    }
+    achieveElements() {
+        var es = {
+            'block': [],
+            'inline-block': [],
+        }
+        var h3 = document.querySelector('#id-level-choice')
+        var button = document.querySelector('#id-save-button')
+        es['block'].push(h3)
+        es['block'].push(button)
+        for (var i = 0; i < levels.length; i++) {
+            var l = document.querySelector(`#id-level-${i+1}`)
+            es['inline-block'].push(l)
+        }
+        return es
     }
 }
