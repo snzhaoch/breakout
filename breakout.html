@@ -8,17 +8,25 @@
     <script src='game/utils.js'></script>
     <script src='game/game.js'></script>
     <script src='scene/scene.js'></script>
-    <script src='scene/start/start.js'></script>
+
     <script src='scene/play/play.js'></script>
     <script src='scene/play/paddle.js'></script>
     <script src='scene/play/block.js'></script>
     <script src='scene/play/ball.js'></script>
+
+    <script src='scene/edit/edit.js'></script>
+    <script src='scene/start/start.js'></script>
     <script src='scene/end/end.js'></script>
     <script src='level.js'></script>
 </head>
 <body>
     <canvas id="id-canvas" width="400" height="300"></canvas>
+    </br>
     <input type='range' min=1></input>
+    <h3>选择关卡</h3>
+    <div id="id-level-div"></div>
+    </br>
+    <input type="button" id="id-save-button" value="保存关卡数据"></input>
     <script src='main.js' charset=”utf-8″></script>
 </body>
 </html>

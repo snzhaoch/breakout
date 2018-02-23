@@ -10,6 +10,10 @@ class SceneStart extends Scene {
             var s = new ScenePlay(_this.game)
             _this.game.changeScene(s)
         })
+        this.registerAction(['e', 'E'], function() {
+            var s = new SceneEdit(_this.game)
+            _this.game.changeScene(s)
+        })
     }
     draw() {
         this.game.content.fillText('摁 Y 游戏开始', 170, 150)

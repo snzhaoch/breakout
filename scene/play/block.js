@@ -17,6 +17,11 @@ var Block = function(position, game){
               o.alive = false
           }
       }
+      o.hasPoint = function(x, y){
+          var xIn = x >= o.x && x <= o.x + o.img.width
+          var yIn = y >= o.y && y <= o.y + o.img.height
+          return xIn && yIn
+      }
       o.collide = function(ball){
           return  o.alive && (rectIntersects(o, ball) || rectIntersects(ball, o))
       }
