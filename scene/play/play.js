@@ -3,7 +3,8 @@ class ScenePlay extends Scene {
         super(game)
         this.paddle =  Paddle(this.game)
         this.ball = Ball(this.game)
-        this.blocks = loadLevel(1, this.game)
+        this.level = 1
+        this.blocks = loadLevel(this.level, this.game)
         this.score = 0
         this.init()
     }
@@ -33,6 +34,7 @@ class ScenePlay extends Scene {
         for (var i = 0; i < level_array.length; i++) {
             let level = level_array[i] + 1
             this.registerAction([level], function(){
+                _this.level = level
                 _this.blocks = loadLevel(level, _this.game)
             }, 0.1)
         }
@@ -87,6 +89,26 @@ class ScenePlay extends Scene {
         if (this.ball.y > this.paddle.y) {
             var s = new SceneEnd(this.game)
             this.game.changeScene(s)
+        }
+        // 判断是否进入下一关
+        var blocksAlive = false
+        for (var i = 0; i < this.blocks.length; i++) {
+            var b = this.blocks[i]
+            // log(b.alive)
+            if (b.alive) {
+                blocksAlive = true
+            }
+        }
+        if (!blocksAlive) {
+            if (this.level < levels.length) {
+                this.level += 1
+                this.blocks = loadLevel(this.level, this.game)
+                alert(`恭喜进入第${this.level}关`)
+            } else {
+                var s = new SceneEnd(this.game)
+                this.game.changeScene(s)
+                alert('恭喜通关')
+            }
         }
     }
     draw() {

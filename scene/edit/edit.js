@@ -10,6 +10,8 @@ class SceneEdit extends Scene {
     init() {
         super.init()
         this.displayInfo()
+
+        // 初始化 this.blocks
         for (var i = 0; i < this.row; i++) {
             for (var v = 0; v < this.colume; v++) {
                 var img = this.game.imageFromName('block')
