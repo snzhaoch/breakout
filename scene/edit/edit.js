@@ -160,7 +160,7 @@ class SceneEdit extends Scene {
                     var y = b[1]
                     for (var s = 0; s < _this.blocks.length; s++) {
                         var b = _this.blocks[s]
-                        if (b.hasPoint(x, y)) {
+                        if (b.x == x && b.y ==y) {
                             b.alive = true
                         }
                     }
